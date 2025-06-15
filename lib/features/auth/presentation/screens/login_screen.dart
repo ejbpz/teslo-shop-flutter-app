@@ -33,7 +33,7 @@ class LoginScreen extends StatelessWidget {
                 const SizedBox( height: 80 ),
     
                 Container(
-                  height: size.height - 260, // 80 los dos sizebox y 100 el ícono
+                  height: size.height - 260,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: scaffoldBackgroundColor,
@@ -73,31 +73,31 @@ class _LoginForm extends ConsumerWidget {
           const SizedBox( height: 90 ),
 
           CustomTextFormField(
-            label: 'Correo',
+            label: 'Email',
             keyboardType: TextInputType.emailAddress,
             onChanged: ref.read(loginFormProvider.notifier).onEmailChange,
           ),
 
           const SizedBox( height: 3 ),
-          CustomErrorField(loginForm: loginForm, type: 'Email'),
-          const SizedBox( height: 10 ),
+          CustomErrorField(loginForm: loginForm, errorMessage: loginForm.email.errorMessage),
+          const SizedBox( height: 13 ),
 
 
           CustomTextFormField(
-            label: 'Contraseña',
+            label: 'Password',
             obscureText: true,
             onChanged: ref.read(loginFormProvider.notifier).onPasswordChange,
           ),
     
           const SizedBox( height: 3 ),
-          CustomErrorField(loginForm: loginForm, type: 'Password'),
+          CustomErrorField(loginForm: loginForm, errorMessage: loginForm.password.errorMessage),
           const SizedBox( height: 30 ),
 
           SizedBox(
             width: double.infinity,
             height: 60,
             child: CustomFilledButton(
-              text: 'Ingresar',
+              text: 'Login',
               buttonColor: Colors.black,
               onPressed: (){
                 ref.read(loginFormProvider.notifier).onFormSubmit();
@@ -110,10 +110,10 @@ class _LoginForm extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('¿No tienes cuenta?'),
+              const Text("Don't have an account?"),
               TextButton(
                 onPressed: ()=> context.push('/register'), 
-                child: const Text('Crea una aquí')
+                child: const Text('Sign Up')
               )
             ],
           ),

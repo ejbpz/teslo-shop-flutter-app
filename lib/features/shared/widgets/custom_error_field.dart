@@ -3,33 +3,21 @@ import 'package:teslo_shop/features/auth/presentation/providers/login_form_provi
 
 class CustomErrorField extends StatelessWidget {
   final LoginFormState loginForm;
-  final String type;
+  final String? errorMessage;
 
   const CustomErrorField({
     super.key, 
     required this.loginForm,
-    required this.type
+    required this.errorMessage
   });
 
   @override
   Widget build(BuildContext context) {
-    final String errorMessage;
-
-    if(type == 'Email') {
-      errorMessage = loginForm.email.errorMessage ?? '';
-    }
-    else if(type == 'Password') {
-      errorMessage = loginForm.password.errorMessage ?? '';
-    } 
-    else {
-      errorMessage = '';
-    }
-
     return Padding(
       padding: const EdgeInsets.only(left: 8.0),
       child: Text(
         loginForm.isFormPosted && !loginForm.isValid
-        ? errorMessage
+        ? errorMessage ?? ''
         : '',
         
         style: TextStyle(color: Colors.red.shade800),
