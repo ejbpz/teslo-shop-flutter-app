@@ -15,6 +15,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   void _setLoggedUser(User user) {
     state = state.copyWith(
+      errorMessage: null,
       user: user,
       authStatus: AuthStatus.authenticated,
     );

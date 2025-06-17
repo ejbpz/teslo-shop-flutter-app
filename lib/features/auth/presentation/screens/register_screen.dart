@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:teslo_shop/features/auth/infrastructure/infrastructure.dart';
 import 'package:teslo_shop/features/auth/presentation/providers/auth_provider.dart';
 import 'package:teslo_shop/features/auth/presentation/providers/register_form_provider.dart';
 import 'package:teslo_shop/features/shared/shared.dart';
@@ -32,8 +33,7 @@ class RegisterScreen extends StatelessWidget {
                   children: [
                     IconButton(
                       onPressed: (){
-                        if ( !context.canPop() ) return;
-                        context.pop();
+                        context.go('/login');
                       }, 
                       icon: const Icon( Icons.navigate_before, size: 40, color: Colors.white )
                     ),
@@ -132,10 +132,14 @@ class _RegisterForm extends ConsumerWidget {
           CustomErrorField(form: registerForm, errorMessage: registerForm.password.errorMessage),
           const SizedBox( height: 13 ),
 
-          const CustomTextFormField(
+          CustomTextFormField(
             label: 'Confirm password',
             obscureText: true,
+            onChanged: ref.read(registerFormProvider.notifier).onRepeatPasswordChange,
           ),
+
+          const SizedBox( height: 3 ),
+          CustomErrorField(form: registerForm, errorMessage: registerForm.repeatPassword.errorMessage),
     
           const SizedBox( height: 30 ),
 
@@ -145,8 +149,9 @@ class _RegisterForm extends ConsumerWidget {
             child: CustomFilledButton(
               text: 'Sign Up',
               buttonColor: Colors.black,
-              onPressed: (){
-                ref.read(registerFormProvider.notifier).onFormSubmit();
+              onPressed: () async {
+                CustomError? errorMessage = await ref.read(registerFormProvider.notifier).onFormSubmit();
+                if(errorMessage != null && context.mounted) showSnackbar(context, errorMessage.message);
               },
             )
           ),
@@ -159,11 +164,7 @@ class _RegisterForm extends ConsumerWidget {
               const Text('Already have an account?'),
               TextButton(
                 onPressed: (){
-                  if ( context.canPop()){
-                    return context.pop();
-                  }
                   context.go('/login');
-                  
                 }, 
                 child: const Text('Login')
               )
