@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:teslo_shop/features/auth/presentation/providers/auth_provider.dart';
+import 'package:teslo_shop/features/auth/presentation/providers/register_form_provider.dart';
 import 'package:teslo_shop/features/shared/shared.dart';
 
 
@@ -60,40 +63,74 @@ class RegisterScreen extends StatelessWidget {
   }
 }
 
-class _RegisterForm extends StatelessWidget {
+class _RegisterForm extends ConsumerWidget {
   const _RegisterForm();
 
-  @override
-  Widget build(BuildContext context) {
+  void showSnackbar(BuildContext context, String errorMessage) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(errorMessage)
+      )
+    );
+  }
 
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final registerForm = ref.watch(registerFormProvider);
+
+    ref.listen(authProvider, (previous, next) {
+      if(next.errorMessage.isEmpty) return;
+
+      showSnackbar(context, next.errorMessage);
+    });
+    
     final textStyles = Theme.of(context).textTheme;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 50),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox( height: 50 ),
-          Text('New account', style: textStyles.titleMedium ),
+
+          Container(
+            width: double.infinity,
+            alignment: AlignmentDirectional.center,
+            child: Text('New account', style: textStyles.titleMedium, textAlign: TextAlign.center),
+          ),
+
           const SizedBox( height: 50 ),
 
-          const CustomTextFormField(
+          CustomTextFormField(
             label: 'Full name',
-            keyboardType: TextInputType.emailAddress,
+            keyboardType: TextInputType.name,
+            onChanged: ref.read(registerFormProvider.notifier).onFullnameChange,
           ),
-          const SizedBox( height: 30 ),
 
-          const CustomTextFormField(
+          const SizedBox( height: 3 ),
+          CustomErrorField(form: registerForm, errorMessage: registerForm.fullname.errorMessage),
+          const SizedBox( height: 13 ),
+
+          CustomTextFormField(
             label: 'Email',
             keyboardType: TextInputType.emailAddress,
+            onChanged: ref.read(registerFormProvider.notifier).onEmailChange,
           ),
-          const SizedBox( height: 30 ),
 
-          const CustomTextFormField(
+          const SizedBox( height: 3 ),
+          CustomErrorField(form: registerForm, errorMessage: registerForm.email.errorMessage),
+          const SizedBox( height: 13 ),
+
+          CustomTextFormField(
             label: 'Password',
             obscureText: true,
+            onChanged: ref.read(registerFormProvider.notifier).onPasswordChange,
           ),
     
-          const SizedBox( height: 30 ),
+          const SizedBox( height: 3 ),
+          CustomErrorField(form: registerForm, errorMessage: registerForm.password.errorMessage),
+          const SizedBox( height: 13 ),
 
           const CustomTextFormField(
             label: 'Confirm password',
@@ -109,7 +146,7 @@ class _RegisterForm extends StatelessWidget {
               text: 'Sign Up',
               buttonColor: Colors.black,
               onPressed: (){
-
+                ref.read(registerFormProvider.notifier).onFormSubmit();
               },
             )
           ),

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:teslo_shop/features/auth/presentation/providers/login_form_provider.dart';
+// import 'package:teslo_shop/features/auth/presentation/providers/login_form_provider.dart';
 
 class CustomErrorField extends StatelessWidget {
-  final LoginFormState loginForm;
+  final dynamic form;
   final String? errorMessage;
 
   const CustomErrorField({
     super.key, 
-    required this.loginForm,
+    required this.form,
     required this.errorMessage
   });
 
@@ -16,7 +16,7 @@ class CustomErrorField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 8.0),
       child: Text(
-        loginForm.isFormPosted && !loginForm.isValid
+        form.isFormPosted && !form.isValid
         ? errorMessage ?? ''
         : '',
         

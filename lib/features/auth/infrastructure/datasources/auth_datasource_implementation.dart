@@ -19,7 +19,7 @@ class AuthDatasourceImplementation extends AuthDatasource {
   Future<User> login(String email, String password) async {
     try {
       final response = await dio.post(
-        'auth/login',
+        '/auth/login',
         data: {
           'email': email,
           'password': password,
@@ -27,14 +27,38 @@ class AuthDatasourceImplementation extends AuthDatasource {
       );
 
       return UserMapper.jsonToUser(LoginResponse.fromJson(response.data));
-    } catch (e) {
-      throw WrongCredentials();
+    } on DioException catch (e) { 
+      if(e.response?.statusCode == 401) throw CustomError('${e.response?.data['message']}');
+      if(e.type == DioExceptionType.connectionTimeout) throw CustomError('Connection timeout, check your connection.');
+
+      throw Exception();
+    }catch (e) {
+      throw Exception();
     }
   }
 
   @override
-  Future<User> register(String fullName, String email, String password) {
-    throw UnimplementedError();
+  Future<User> register(String fullName, String email, String password) async {
+    try {
+      final response = await dio.post(
+        '/auth/register',
+        data: {
+          'email': email,
+          'password': password,
+          'fullName': fullName,
+        }
+      );
+
+      return UserMapper.jsonToUser(LoginResponse.fromJson(response.data));
+    } on DioException catch (e) { 
+      if(e.response?.statusCode == 401) throw CustomError('${e.response?.data['message']}');
+      if(e.response?.statusCode == 400) throw CustomError('User already exists.');
+      if(e.type == DioExceptionType.connectionTimeout) throw CustomError('Connection timeout, check your connection.');
+
+      throw Exception();
+    }catch (e) {
+      throw Exception();
+    }
   }
 
 }
