@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:teslo_shop/features/auth/domain/entities/form_auth.dart';
 // import 'package:teslo_shop/features/auth/presentation/providers/login_form_provider.dart';
 
 class CustomErrorField extends StatelessWidget {
-  final dynamic form;
+  final FormAuth form;
   final String? errorMessage;
 
   const CustomErrorField({

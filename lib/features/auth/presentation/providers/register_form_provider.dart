@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
+import 'package:teslo_shop/features/auth/domain/entities/form_auth.dart';
 import 'package:teslo_shop/features/auth/infrastructure/errors/auth_errors.dart';
 import 'package:teslo_shop/features/auth/presentation/providers/auth_provider.dart';
 import 'package:teslo_shop/features/shared/infrastructure/inputs/inputs.dart';
@@ -70,9 +71,12 @@ class RegisterFormNotifier extends StateNotifier<RegisterFormState> {
   }
 }
 
-class RegisterFormState {
+class RegisterFormState extends FormAuth {
+  @override
   final bool isPosting;
+  @override
   final bool isFormPosted;
+  @override
   final bool isValid;
   final Fullname fullname;
   final Email email;
