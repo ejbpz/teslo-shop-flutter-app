@@ -50,8 +50,13 @@ class RegisterFormNotifier extends StateNotifier<RegisterFormState> {
   onFormSubmit() async {
     _touchEveryField();
     if(!state.isValid) return;
+
+    state = state.copyWith(isPosting: true);
+
     if(state.password.value != state.repeatPassword.value) return CustomError('Password doesn\'t match.');
     await registerUserCallback(state.email.value, state.password.value, state.fullname.value);
+
+    state = state.copyWith(isPosting: false);
   }
 
   _touchEveryField() {

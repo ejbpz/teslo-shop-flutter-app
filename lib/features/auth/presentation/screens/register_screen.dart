@@ -147,11 +147,17 @@ class _RegisterForm extends ConsumerWidget {
             width: double.infinity,
             height: 60,
             child: CustomFilledButton(
-              text: 'Sign Up',
+              text: !registerForm.isPosting 
+                ? 'Sign Up'
+                : 'Loading...',
               buttonColor: Colors.black,
               onPressed: () async {
-                CustomError? errorMessage = await ref.read(registerFormProvider.notifier).onFormSubmit();
-                if(errorMessage != null && context.mounted) showSnackbar(context, errorMessage.message);
+                if(registerForm.isPosting) {
+                  null;
+                } else {
+                  CustomError? errorMessage = await ref.read(registerFormProvider.notifier).onFormSubmit();
+                  if(errorMessage != null && context.mounted) showSnackbar(context, errorMessage.message);
+                }
               },
             )
           ),
@@ -163,9 +169,7 @@ class _RegisterForm extends ConsumerWidget {
             children: [
               const Text('Already have an account?'),
               TextButton(
-                onPressed: (){
-                  context.go('/login');
-                }, 
+                onPressed: () => context.go('/login'), 
                 child: const Text('Login')
               )
             ],
