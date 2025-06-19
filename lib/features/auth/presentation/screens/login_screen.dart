@@ -91,6 +91,7 @@ class _LoginForm extends ConsumerWidget {
 
           CustomTextFormField(
             label: 'Email',
+            icon: Icons.email_outlined,
             keyboardType: TextInputType.emailAddress,
             onChanged: ref.read(loginFormProvider.notifier).onEmailChange,
           ),
@@ -102,8 +103,10 @@ class _LoginForm extends ConsumerWidget {
 
           CustomTextFormField(
             label: 'Password',
+            icon: Icons.lock_outline,
             obscureText: true,
             onChanged: ref.read(loginFormProvider.notifier).onPasswordChange,
+            onFieldSubmitted: (_) => ref.read(loginFormProvider.notifier).onFormSubmit(),
           ),
     
           const SizedBox( height: 3 ),

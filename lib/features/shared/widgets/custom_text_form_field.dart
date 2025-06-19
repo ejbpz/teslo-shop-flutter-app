@@ -7,8 +7,10 @@ class CustomTextFormField extends StatelessWidget {
   final String? hint;
   final String? errorMessage;
   final bool obscureText;
+  final IconData? icon;
   final TextInputType? keyboardType;
   final Function(String)? onChanged;
+  final Function(String)? onFieldSubmitted;
   final String? Function(String?)? validator;
 
   const CustomTextFormField({
@@ -17,8 +19,10 @@ class CustomTextFormField extends StatelessWidget {
     this.hint, 
     this.errorMessage, 
     this.obscureText = false,
+    this.icon,
     this.keyboardType = TextInputType.text,
     this.onChanged, 
+    this.onFieldSubmitted, 
     this.validator, 
   });
 
@@ -35,7 +39,6 @@ class CustomTextFormField extends StatelessWidget {
     const borderRadius = Radius.circular(15);
 
     return Container(
-      // padding: const EdgeInsets.only(bottom: 0, top: 15),
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(topLeft: borderRadius, bottomLeft: borderRadius, bottomRight: borderRadius ),
@@ -48,6 +51,7 @@ class CustomTextFormField extends StatelessWidget {
         ]
       ),
       child: TextFormField(
+        onFieldSubmitted: onFieldSubmitted,
         onChanged: onChanged,
         validator: validator,
         obscureText: obscureText,
@@ -57,14 +61,12 @@ class CustomTextFormField extends StatelessWidget {
           floatingLabelStyle: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
           enabledBorder: border,
           focusedBorder: border,
-          errorBorder: border.copyWith( borderSide: BorderSide( color: Colors.red.shade800 )),
-          focusedErrorBorder: border.copyWith( borderSide: BorderSide( color: Colors.red.shade800 )),
           isDense: true,
           label: label != null ? Text(label!) : null,
           hintText: hint,
           errorText: errorMessage,
           focusColor: colors.primary,
-          // icon: Icon( Icons.supervised_user_circle_outlined, color: colors.primary, )
+          prefixIcon: Icon(icon),
         ),
       ),
     );

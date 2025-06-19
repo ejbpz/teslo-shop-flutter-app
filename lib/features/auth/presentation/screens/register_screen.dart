@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:teslo_shop/features/auth/auth.dart';
 import 'package:teslo_shop/features/auth/infrastructure/infrastructure.dart';
 import 'package:teslo_shop/features/auth/presentation/providers/auth_provider.dart';
 import 'package:teslo_shop/features/auth/presentation/providers/register_form_provider.dart';
@@ -104,6 +105,7 @@ class _RegisterForm extends ConsumerWidget {
 
           CustomTextFormField(
             label: 'Full name',
+            icon: Icons.person_2_outlined,
             keyboardType: TextInputType.name,
             onChanged: ref.read(registerFormProvider.notifier).onFullnameChange,
           ),
@@ -114,6 +116,7 @@ class _RegisterForm extends ConsumerWidget {
 
           CustomTextFormField(
             label: 'Email',
+            icon: Icons.email_outlined,
             keyboardType: TextInputType.emailAddress,
             onChanged: ref.read(registerFormProvider.notifier).onEmailChange,
           ),
@@ -124,6 +127,7 @@ class _RegisterForm extends ConsumerWidget {
 
           CustomTextFormField(
             label: 'Password',
+            icon: Icons.lock_outline,
             obscureText: true,
             onChanged: ref.read(registerFormProvider.notifier).onPasswordChange,
           ),
@@ -134,8 +138,10 @@ class _RegisterForm extends ConsumerWidget {
 
           CustomTextFormField(
             label: 'Confirm password',
+            icon: Icons.lock_outline,
             obscureText: true,
             onChanged: ref.read(registerFormProvider.notifier).onRepeatPasswordChange,
+            onFieldSubmitted: (_) => ref.read(registerFormProvider.notifier).onFormSubmit(),
           ),
 
           const SizedBox( height: 3 ),
@@ -152,11 +158,16 @@ class _RegisterForm extends ConsumerWidget {
                 : 'Loading...',
               buttonColor: Colors.black,
               onPressed: () async {
-                if(registerForm.isPosting) {
-                  null;
-                } else {
+                if(!registerForm.isPosting) {
                   CustomError? errorMessage = await ref.read(registerFormProvider.notifier).onFormSubmit();
-                  if(errorMessage != null && context.mounted) showSnackbar(context, errorMessage.message);
+                  
+                  if(errorMessage != null && context.mounted) {
+                    showSnackbar(context, errorMessage.message);
+                  } 
+                  
+                  if(errorMessage == null && context.mounted) {
+                    context.go('/login');
+                  }
                 }
               },
             )
