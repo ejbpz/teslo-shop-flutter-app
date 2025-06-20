@@ -40,12 +40,12 @@ class ProductsResponse {
         tags: List<String>.from(json["tags"].map((x) => x)),
         images: List<String>.from(
           json["images"].map(
-            (String x) => x.startsWith('http')
+            (x) => x.startsWith('http')
               ? x
               : '${Environment.apiUrl}/files/product/$x',
           )
         ),
-        user: UserMapper.jsonToUser(json["user"]),
+        user: UserMapper.jsonToUser(LoginResponse.fromJson(json["user"])),
     );
 }
 
