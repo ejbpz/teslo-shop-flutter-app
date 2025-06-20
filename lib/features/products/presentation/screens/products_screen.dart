@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:go_router/go_router.dart';
 import 'package:teslo_shop/features/products/presentation/providers/provider.dart';
 import 'package:teslo_shop/features/shared/shared.dart';
+
+import '../widgets/product_card.dart';
 
 class ProductsScreen extends StatelessWidget {
   const ProductsScreen({super.key});
@@ -18,7 +21,7 @@ class ProductsScreen extends StatelessWidget {
         title: const Text('All Products'),
         actions: [
           IconButton(
-            onPressed: (){}, 
+            onPressed: () {}, 
             icon: const Icon(Icons.search_rounded)
           )
         ],
@@ -44,10 +47,16 @@ class _ProductsView extends ConsumerStatefulWidget {
 class _ProductsViewState extends ConsumerState<_ProductsView> {
   final ScrollController scrollController = ScrollController();
 
+  Future<void> _loadNextPage() async {
+    if ((scrollController.position.pixels + 400) >= scrollController.position.maxScrollExtent) {
+      ref.read(productsProvider.notifier).loadNextPage();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-
+    scrollController.addListener(_loadNextPage);
     ref.read(productsProvider.notifier).loadNextPage();
   }
 
@@ -62,19 +71,20 @@ class _ProductsViewState extends ConsumerState<_ProductsView> {
     final productsState = ref.watch(productsProvider);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 5
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: MasonryGridView.count(
         crossAxisCount: 2, 
         mainAxisSpacing: 15,
-        crossAxisSpacing: 15,
+        crossAxisSpacing: 20,
+        controller: scrollController,
         physics: const BouncingScrollPhysics(),
         itemCount: productsState.products.length,
         itemBuilder: (context, index) {
           final product = productsState.products[index];
-          return Text(product.title);
+          return GestureDetector(
+            onTap: () => context.push('/product/${product.id}'),
+            child: ProductCard(product: product)
+          );
         },
       )
     );
