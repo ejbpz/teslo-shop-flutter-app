@@ -18,7 +18,12 @@ class ProductsScreen extends StatelessWidget {
     return Scaffold(
       drawer: SideMenu( scaffoldKey: scaffoldKey ),
       appBar: AppBar(
-        title: const Text('All Products'),
+        centerTitle: true,
+        titleSpacing: 0,
+        title: const Text(
+          'All Products',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         actions: [
           IconButton(
             onPressed: () {}, 
