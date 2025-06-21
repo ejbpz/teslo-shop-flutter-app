@@ -71,11 +71,11 @@ class _ProductsViewState extends ConsumerState<_ProductsView> {
     final productsState = ref.watch(productsProvider);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: MasonryGridView.count(
         crossAxisCount: 2, 
-        mainAxisSpacing: 15,
-        crossAxisSpacing: 20,
+        mainAxisSpacing: 5,
+        crossAxisSpacing: 5,
         controller: scrollController,
         physics: const BouncingScrollPhysics(),
         itemCount: productsState.products.length,
