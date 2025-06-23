@@ -22,6 +22,19 @@ class ProductNotifier extends StateNotifier<ProductState> {
     loadProduct();
   }
 
+  Future<void> createUpdateProduct(Map<String, dynamic> productLike) async {
+    try {
+      final product = await productsRepository.createUpdateProduct(productLike);
+
+      state = state.copyWith(
+        isLoading: false,
+        product: product
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<void> loadProduct() async {
     try {
       final product = await productsRepository.getProductById(state.id);
