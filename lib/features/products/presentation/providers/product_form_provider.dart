@@ -6,16 +6,16 @@ import 'package:teslo_shop/features/products/presentation/providers/provider.dar
 import 'package:teslo_shop/features/shared/shared.dart';
 
 final productFormProvider = StateNotifierProvider.autoDispose.family<ProductFormNotifier, ProductFormState, Product>((ref, product) {
-  final productRepository = ref.watch(productProvider(product.id).notifier);
+  final productRepository = ref.watch(productsProvider.notifier);
 
   return ProductFormNotifier(
     product: product,
-    onSubmitCallback: productRepository.createUpdateProduct
+    onSubmitCallback: productRepository.createOrUpdateProduct
   );
 });
 
 class ProductFormNotifier extends StateNotifier<ProductFormState> {
-  final void Function(Map<String, dynamic> productLike)? onSubmitCallback;
+  final Future<bool> Function(Map<String, dynamic> productLike)? onSubmitCallback;
 
   ProductFormNotifier({
     this.onSubmitCallback,
@@ -53,8 +53,11 @@ class ProductFormNotifier extends StateNotifier<ProductFormState> {
       ).toList()
     };
 
-    onSubmitCallback!(productLike);
-    return true;
+    try {
+      return await onSubmitCallback!(productLike);
+    } catch (e) {
+      return false;
+    }
   }
 
   void _touchedEveryField() {

@@ -42,7 +42,7 @@ class ProductsResponse {
           json["images"].map(
             (x) => x.startsWith('http')
               ? x
-              : '${Environment.apiUrl}/files/product/$x',
+              : '${Environment.apiUrl}/files/product${(x.startsWith('/')) ? x : '/$x'}' 
           )
         ),
         user: UserMapper.jsonToUser(LoginResponse.fromJson(json["user"])),

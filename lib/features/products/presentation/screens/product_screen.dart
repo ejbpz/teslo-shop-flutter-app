@@ -25,9 +25,9 @@ class ProductScreen extends ConsumerWidget {
         ),
         titleSpacing: 0,
         centerTitle: true,
-        title: const Text(
-          'Product',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Text(
+          '${productId == null ? 'New' : 'Edit'} Product',
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(
@@ -65,7 +65,6 @@ class _ProductView extends ConsumerWidget {
 
     return ListView(
       children: [
-    
           SizedBox(
             height: 250,
             width: 600,
@@ -73,7 +72,16 @@ class _ProductView extends ConsumerWidget {
           ),
     
           const SizedBox( height: 10 ),
-          Center(child: Text( productForm.title.value, style: textStyles.titleSmall )),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+            child: Center(
+              child: Text( 
+                productForm.title.value, 
+                style: textStyles.titleSmall,
+                textAlign: TextAlign.center,
+              )
+            ),
+          ),
           const SizedBox( height: 10 ),
           _ProductInformation( product: product ),
           
