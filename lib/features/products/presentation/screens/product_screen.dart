@@ -24,46 +24,52 @@ class ProductScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final productState = ref.watch(productProvider(productId));
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => context.canPop() ? context.pop() : null, 
-          icon: const Icon(Icons.navigate_before)
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            onPressed: () => context.canPop() ? context.pop() : null, 
+            icon: const Icon(Icons.navigate_before)
+          ),
+          titleSpacing: 0,
+          centerTitle: true,
+          title: Text(
+            '${productId == 'new' ? 'New' : 'Edit'} Product',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                FocusScope.of(context).unfocus();
+              }, 
+              icon: const Icon(Icons.camera_alt_outlined)
+            )
+          ],
         ),
-        titleSpacing: 0,
-        centerTitle: true,
-        title: Text(
-          '${productId == 'new' ? 'New' : 'Edit'} Product',
-          style: const TextStyle(fontWeight: FontWeight.bold),
+        body: productState.isLoading 
+        ? const FullScreenLoader()
+        : _ProductView(product: productState.product!),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            FocusScope.of(context).unfocus();
+            if(productState.product == null) return;
+      
+            final productForm = ref.watch(productFormProvider(productState.product!).notifier);
+      
+            await productForm.onFormSubmit()
+              .then((value) {
+                if(context.mounted) {
+                  showSnackbar(
+                    (!value) 
+                    ? 'Error updating' 
+                    : 'Product ${productId == 'new' ? 'added' : 'updated'}!', context
+                  );
+                }
+              });
+          }, 
+          child: const Icon(Icons.sd_storage_outlined),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {}, 
-            icon: const Icon(Icons.camera_alt_outlined)
-          )
-        ],
-      ),
-      body: productState.isLoading 
-      ? const FullScreenLoader()
-      : _ProductView(product: productState.product!),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          if(productState.product == null) return;
-
-          final productForm = ref.watch(productFormProvider(productState.product!).notifier);
-
-          await productForm.onFormSubmit()
-            .then((value) {
-              if(context.mounted) {
-                showSnackbar(
-                  (!value) 
-                  ? 'Error updating' 
-                  : 'Product updated!', context
-                );
-              }
-            });
-        }, 
-        child: const Icon(Icons.sd_storage_outlined),
       ),
     );
   }
@@ -218,6 +224,7 @@ class _SizeSelector extends StatelessWidget {
       }).toList(), 
       selected: Set.from( selectedSizes ),
       onSelectionChanged: (newSelection) {
+        FocusScope.of(context).unfocus();
         onSizesChanged(List.from(newSelection));
       },
       multiSelectionEnabled: true,
@@ -256,6 +263,7 @@ class _GenderSelector extends StatelessWidget {
         }).toList(), 
         selected: { selectedGender },
         onSelectionChanged: (newSelection) {
+          FocusScope.of(context).unfocus();
           onGenderChanged(newSelection.first);
         },
       ),

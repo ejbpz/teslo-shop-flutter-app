@@ -22,9 +22,6 @@ class ProductsNotifier extends StateNotifier<ProductsState> {
       final isProductInState = state.products.any((element) => element.id == product.id);
 
       if(!isProductInState) {
-        state = state.copyWith(
-          products: [...state.products, product]
-        );
         return true;
       }
         
