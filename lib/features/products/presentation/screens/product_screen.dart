@@ -33,7 +33,7 @@ class ProductScreen extends ConsumerWidget {
         titleSpacing: 0,
         centerTitle: true,
         title: Text(
-          '${productId == null ? 'New' : 'Edit'} Product',
+          '${productId == 'new' ? 'New' : 'Edit'} Product',
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         actions: [
