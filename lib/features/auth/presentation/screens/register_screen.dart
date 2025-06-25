@@ -162,7 +162,7 @@ class _RegisterForm extends ConsumerWidget {
                     showSnackbar(context, errorMessage.message);
                   } 
                   
-                  if(errorMessage == null && context.mounted) {
+                  if(registerForm.isValid && errorMessage == null && context.mounted) {
                     context.go('/login');
                   }
                 }
