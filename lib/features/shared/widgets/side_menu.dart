@@ -25,18 +25,15 @@ class _SideMenuState extends ConsumerState<SideMenu> {
   Widget build(BuildContext context) {
     final hasNotch = MediaQuery.of(context).viewPadding.top > 35;
     final size = MediaQuery.of(context).size;
-    final textStyles = Theme.of(context).textTheme;  
+    final textStyles = Theme.of(context).textTheme;
+    final name = ref.watch(authProvider).user?.fullName;
 
     return NavigationDrawer(
       elevation: 1,
       selectedIndex: navDrawerIndex,
       onDestinationSelected: (value) {
-        setState(() {
-          navDrawerIndex = value;
-        });
-
-        // final menuItem = appMenuItems[value];
-        // context.push( menuItem.link );
+        setState(() => navDrawerIndex = value);
+        if(value == 1) context.push('/product/new');
         widget.scaffoldKey.currentState?.closeDrawer();
 
       },
@@ -48,11 +45,12 @@ class _SideMenuState extends ConsumerState<SideMenu> {
 
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 16, 20),
-          child: Text('YourName', style: textStyles.titleSmall ),
+          child: Text(name ?? '', style: textStyles.titleSmall),
         ),
 
         const NavigationDrawerDestination(
-            icon: Icon( Icons.storefront_sharp ), 
+            icon: Icon( Icons.store_mall_directory_outlined), 
+            selectedIcon: Icon(Icons.store_mall_directory),
             label: Text( 'All Products' ),
         ),
 
@@ -61,13 +59,15 @@ class _SideMenuState extends ConsumerState<SideMenu> {
           child: Divider(),
         ),
 
-        const Padding(
-          padding: EdgeInsets.fromLTRB(28, 10, 16, 10),
-          child: Text('Other options'),
+        const NavigationDrawerDestination(
+            icon: Icon(Icons.add_business_outlined), 
+            selectedIcon: Icon(Icons.add_business_rounded), 
+            label: Text('New Product'),
+            
         ),
 
         SizedBox(
-          height: size.height * 0.7,
+          height: size.height * 0.65,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
