@@ -33,7 +33,6 @@ flutter run
 - **Dart**
 - **Flutter**
 - **Riverpod**
-- **Bloc**
 - **Formz**
 
 ## 📜 License
